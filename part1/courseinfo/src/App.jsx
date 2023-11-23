@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Course from "./components/Course";
+import axios from "axios";
 
 const App = () => {
   const courses = [
@@ -47,6 +48,18 @@ const App = () => {
     }
   ];
 
+  const fetchData = () => {
+    console.log("Effect...");
+    axios.get('http://localhost:3001/notes').then(response => {
+      let data = response.data;
+      console.log("Data", data);
+    }).catch(err => { console.log(err); })
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       {
@@ -55,5 +68,4 @@ const App = () => {
     </>
   );
 }
-
 export default App;
