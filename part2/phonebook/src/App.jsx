@@ -47,7 +47,15 @@ const App = () => {
         setNotification(null)
         setClassName("")
       }, 5000);
-    }).catch((error) => console.log(error.message));
+    }).catch((error) => {
+      console.log(error.response.data)
+      setNotification(error.response.data);
+      setClassName("error")
+      setTimeout(() => {
+        setNotification(null)
+        setClassName("")
+      }, 5000);
+    });
 
   }
   const handleChange = (event) => {
@@ -81,7 +89,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm handleSubmit={handleSubmit} handleChange={handleChange} name={newName} number={newNumber} />
       <h1>Numbers</h1>
-      <Persons persons={persons} destroy={destroy} setPersons={setPersons} setNotification={setNotification} setClassName={setClassName } />
+      <Persons persons={persons} destroy={destroy} setPersons={setPersons} setNotification={setNotification} setClassName={setClassName} />
     </div>
   )
 }
