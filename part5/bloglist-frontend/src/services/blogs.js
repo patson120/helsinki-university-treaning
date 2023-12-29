@@ -20,11 +20,12 @@ const getAll = () => {
 }
 
 const create = (blog) => {
-    const config = {
-        headers: { Authorization: getToken() },
-    }
+    const config = {headers: { Authorization: getToken() }}
     const request = axios.post(baseUrl, blog, config)
-    return request.then(response => response.data)
+    const localData = JSON.parse(window.localStorage.getItem('user'))
+    return request.then(response => {
+        return  { ...response.data, user: { id: blog.user,name: localData.name,username: localData.username } }
+    })
 }
 
 

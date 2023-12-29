@@ -71,6 +71,10 @@ const App = () => {
     const createblog = async (blog) => {
         try {
             const newBlog = await blogService.create(blog)
+            // const localData = JSON.parse(localStorage.getItem('user'))
+            // const user = {
+            //     name: 
+            // }
             setBlogs(prev => [newBlog, ...prev,])
             setNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
             setClassName('success')
@@ -87,7 +91,6 @@ const App = () => {
             }, 3000)
         }
     }
-
     return (
         <>
             <Notification message={notification} className={className} />
