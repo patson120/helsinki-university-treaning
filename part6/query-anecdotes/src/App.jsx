@@ -3,8 +3,11 @@ import Notification from './components/Notification'
 
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { getAnecdotes, updatedAnecdote } from './request'
+import { useContext } from 'react'
+import NotificationContext from './components/NotificationContext'
 
 const App = () => {
+  const [notification, dispatch] = useContext(NotificationContext)
 
   const queryClient = useQueryClient()
   const updateAnecdoteMutation = useMutation({
@@ -13,19 +16,26 @@ const App = () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
     },
   })
-  
+
   const handleVote = (anecdote) => {
-    updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+    updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 },
+      {
+        onSuccess: (data) => {
+          dispatch({ type: 'SET_NOTIFICATION', payload: { text: `Anecdote '${anecdote.content}' voted` } })
+          setTimeout(() => {
+            dispatch({ type: 'CLEAR_NOTIFICATION' })
+          }, 2500);
+        }
+      }
+    )
   }
-  
-  
+
   const result = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAnecdotes,
     retry: 3,
     refetchOnWindowFocus: false
   })
-
   // console.log(JSON.parse(JSON.stringify(result)))
 
   if (result.isLoading) {
@@ -33,7 +43,7 @@ const App = () => {
   }
 
   if (result.error) {
-    return <div>anecdote service not available due to problems in server</div>
+    return <div style={{ textAlign: 'center'}}>anecdote service not available due to problems in server</div>
   }
 
   const anecdotes = result.data
@@ -41,10 +51,8 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-
-      <Notification />
+      <Notification message={notification} />
       <AnecdoteForm />
-
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
