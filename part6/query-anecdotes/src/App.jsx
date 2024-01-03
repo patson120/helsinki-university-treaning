@@ -45,7 +45,6 @@ const App = () => {
   if (result.error) {
     return <div style={{ textAlign: 'center'}}>anecdote service not available due to problems in server</div>
   }
-
   const anecdotes = result.data
 
   return (
