@@ -1,18 +1,24 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import { useEffect, useState } from 'react'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { createBlog, setBlogs } from './Redux/reducers/blogReducer'
+import { setNotification } from './Redux/reducers/notificationReducer'
+import BlogList from './components/BlogList'
+import { clearUser, setUser } from './Redux/reducers/userReducer'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
+    const dispatch = useDispatch()
+    const notification = useSelector(state => state.notification)
+    const user = useSelector(state => state.user)
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
-    const [notification, setNotification] = useState(null)
     const [className, setClassName] = useState('')
 
     const handleLogin = async (event) => {
@@ -22,14 +28,15 @@ const App = () => {
             window.localStorage.setItem(
                 'user', JSON.stringify(user)
             )
-            setUser(user)
+            
+            dispatch(setUser({user}))
             setUsername('')
             setPassword('')
         } catch (error) {
-            setNotification(error.message)
+            dispatch(setNotification({text: error.message}));
             setClassName('error')
             setTimeout(() => {
-                setNotification(null)
+                dispatch(setNotification({text: null}));
                 setClassName('')
             }, 3000)
         }
@@ -37,56 +44,52 @@ const App = () => {
 
     useEffect(() => {
         blogService.getAll()
-            .then((blogs) => {
+            .then((blogsList) => {
                 // sort by likes descending
-                blogs.sort((a, b) => b.likes - a.likes)
-                setBlogs(blogs)
+                blogsList.sort((a, b) => b.likes - a.likes)
+                dispatch(setBlogs({blogs: blogsList}));
             })
             .catch(error => {
                 if (error.response.status === 401) {
                     logout()
                 }
-                setNotification(error.response.data.error)
+                dispatch(setNotification({text: error.response.data.error}))
                 setClassName('error')
                 setTimeout(() => {
-                    setNotification(null)
+                    dispatch(setNotification({text: null}))
                     setClassName('')
                 }, 3000)
             })
-    }, [])
+    }, [user])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('user')
         if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            setUser(user)
+            const data = JSON.parse(loggedUserJSON)
+            dispatch(setUser({user: data}))
         }
     }, [])
 
     const logout = () => {
         window.localStorage.removeItem('user')
-        setUser(null)
+        dispatch(clearUser())
     }
 
     const createblog = async (blog) => {
         try {
-            const newBlog = await blogService.create(blog)
-            // const localData = JSON.parse(localStorage.getItem('user'))
-            // const user = {
-            //     name: 
-            // }
-            setBlogs(prev => [newBlog, ...prev,])
-            setNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
+            dispatch(createBlog(blog))
+            dispatch(setNotification({text: `A new blog ${blog.title} by ${blog.author} added`}))
+
             setClassName('success')
             setTimeout(() => {
-                setNotification(null)
+                dispatch(setNotification({text: null}))
                 setClassName('')
             }, 3000)
         } catch (error) {
-            setNotification(error.message)
+            dispatch(setNotification({text: error.message}))
             setClassName('error')
             setTimeout(() => {
-                setNotification(null)
+                dispatch(setNotification({text: null}))
                 setClassName('')
             }, 3000)
         }
@@ -113,12 +116,7 @@ const App = () => {
                     <Togglable buttonLabel='New blog'>
                         <BlogForm create={createblog} />
                     </Togglable>
-                    <div>
-                        <h2>blogs</h2>
-                        {blogs.map(blog =>
-                            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
-                        )}
-                    </div>
+                   <BlogList />
                 </div>
             }
         </>

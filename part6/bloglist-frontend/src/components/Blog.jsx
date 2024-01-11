@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteBlogById, updateLike} from '../Redux/reducers/blogReducer'
 
-const Blog = ({ blog, setBlogs }) => {
-    const user = JSON.parse(window.localStorage.getItem('user'))
+const Blog = ({ blog }) => {
+    const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
     const [visibilty, setVisibity] = useState(false)
     const [data, setData] = useState(blog)
@@ -16,22 +18,14 @@ const Blog = ({ blog, setBlogs }) => {
         borderWidth: 1,
         marginBottom: 5
     }
-    const updateLike = async () => {
-        const response = await blogService.update({ ...data, likes: data.likes + 1 })
-        setData({ ...data, likes: response.likes })
-
-        setBlogs(prev => prev.map(b => {
-            if (b.id == data.id) {
-                b.likes = b.likes + 1
-            }
-            return b;
-        }))
+    const updateBlogLike = async () => {
+        dispatch(updateLike(data))
+        setData({ ...data, likes: data.likes + 1 })
     }
 
     const removeBlog = async () => {
         if (window.confirm('Are you sure you want to remove this blog ?')) {
-            await blogService.deleteBlog(data.id)
-            setBlogs(prev => prev.filter(b => b.id !== data.id))
+            dispatch(deleteBlogById(blog.id))
         }
     }
     return (
@@ -40,7 +34,7 @@ const Blog = ({ blog, setBlogs }) => {
             {visibilty &&
                 <div>
                     <p className='url'>{data.url}</p>
-                    <p className='likes'>likes: {data.likes} <button className='like' onClick={() => updateLike()}>like</button> </p>
+                    <p className='likes'>likes: {data.likes} <button className='like' onClick={() => updateBlogLike()}>like</button> </p>
                     <p>{data.author}</p>
                     <p>Posted by: {data.user.name}</p>
                     {user?.username === data.user.username && <button onClick={removeBlog} >Remove</button>}

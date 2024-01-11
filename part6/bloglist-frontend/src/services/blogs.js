@@ -26,13 +26,15 @@ const create = (blog) => {
     return request.then(response => {
         return  { ...response.data, user: { id: blog.user,name: localData.name,username: localData.username } }
     })
+   
 }
 
 
 const update = (blog) => {
     const config = {
         headers: { Authorization: getToken() },
-    }
+    } 
+    blog = {...blog, likes: blog.likes + 1}
     const request = axios.put(`${baseUrl}/${blog.id}`, blog, config)
     return request.then(response => response.data)
 }
