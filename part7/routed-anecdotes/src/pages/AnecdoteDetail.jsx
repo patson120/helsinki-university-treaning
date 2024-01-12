@@ -5,7 +5,6 @@ import AnecdoteContext from "../AnecdoteContextProvider";
 
 const AnecdoteDetail = () => {
     const match = useMatch('/anecdotes/:id')
-    const navigate = useNavigate()
     const [state, _] = useContext(AnecdoteContext)
     const anecdote = state.anecdotes.find(a => `${a.id}` === `${match.params.id}`)    
     

@@ -19,15 +19,15 @@ const UserDetail = () => {
         <>
            {
             user && 
-                <>
-                    <h2>{ user.username }</h2>
-                    <h5>Added blogs</h5>
-                    <ul>
+                <div className='mt-4'>
+                    <h2 className='h2'>{ user.username }</h2>
+                    <h5 className='my-4 h5'>Added blogs</h5>
+                    <ul className='ul'>
                         {
-                            user.blogs.map(blog => <li key={`${blog.id}`}>{ blog.title }</li>  )
+                            user.blogs.map(blog => <li className='li my-2' key={`${blog.id}`}>{ blog.title }</li>  )
                         }
                     </ul>
-                </>
+                </div>
             }
         </>
     )

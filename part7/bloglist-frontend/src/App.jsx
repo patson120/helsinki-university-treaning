@@ -1,6 +1,6 @@
 
 import {
-    Routes, Route
+    Routes, Route, Link
   } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import BlogForm from './components/BlogForm'
@@ -32,11 +32,9 @@ const App = () => {
         event.preventDefault()
         try {
             const user = await loginService.login({ username, password })
-            window.localStorage.setItem(
-                'user', JSON.stringify(user)
-            )
-            
+            window.localStorage.setItem('user', JSON.stringify(user))
             dispatch(setUser({user}))
+            
             setUsername('')
             setPassword('')
         } catch (error) {
@@ -51,22 +49,22 @@ const App = () => {
 
     useEffect(() => {
         blogService.getAll()
-            .then((blogsList) => {
-                // sort by likes descending
-                blogsList.sort((a, b) => b.likes - a.likes)
-                dispatch(setBlogs({blogs: blogsList}));
-            })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    logout()
-                }
-                dispatch(setNotification({text: error.response.data.error}))
-                setClassName('error')
-                setTimeout(() => {
-                    dispatch(setNotification({text: null}))
-                    setClassName('')
-                }, 3000)
-            })
+        .then((blogsList) => {
+            // sort by likes descending
+            blogsList.sort((a, b) => b.likes - a.likes)
+            dispatch(setBlogs({blogs: blogsList}));
+        })
+        .catch(error => {
+            if (error.response.status === 401) {
+                JSON.parse(window.localStorage.getItem('user')) ? null: logout()
+            }
+            dispatch(setNotification({text: error.response.data.error}))
+            setClassName('error')
+            setTimeout(() => {
+                dispatch(setNotification({text: null}))
+                setClassName('')
+            }, 3000)
+        })
     }, [user])
 
     useEffect(() => {
@@ -102,7 +100,7 @@ const App = () => {
         }
     }
     return (
-        <>
+        <div className="container mt-5">
             <Notification message={notification} className={className} />
             {!user && <Togglable buttonLabel='login'>
                 <LoginForm
@@ -116,9 +114,26 @@ const App = () => {
 
             {user &&
                 <div>
-                    <p>{user.username} logged in
-                        <button onClick={logout} >logout</button>
-                    </p>
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse justify-content-between px-3" id="navbarNav">
+                            <ul className="navbar-nav">
+                                <li className="nav-item active">
+                                    <Link to={'/'} className="nav-link" style={{ marginRight: '10px'}} >blogs</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to={'/users'} className="nav-link" style={{ marginRight: '10px'}} >users</Link>
+                                </li>
+                            </ul>
+                            <div className='d-flex align-items-center'>
+                                <p className='' style={{ marginRight: '30px', marginTop:  '15px'}}>{user.username} logged in</p>
+                                <button className="btn btn-light" onClick={logout} >logout</button>
+                            </div>
+                        </div>
+                    </nav>
+                   
                     <Togglable buttonLabel='New blog'>
                         <BlogForm create={createblog} />
                     </Togglable>
@@ -128,19 +143,14 @@ const App = () => {
             {
                 user && 
                 <Routes>
-                    <Route path="/blogs" element={<BlogList />} />
+                    <Route path="/" element={<BlogList />} />
                     <Route path="/blogs/:id" element={<BlogDetail />} />
                     <Route path="/users" element={<UserList />} />
                     <Route path="/users/:id" element={<UserDetail />} />
                 </Routes>
             }
-
             
-
-          
-
-            
-        </>
+        </div>
     )
 }
 

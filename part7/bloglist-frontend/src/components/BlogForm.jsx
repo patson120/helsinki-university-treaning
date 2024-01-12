@@ -11,17 +11,35 @@ const BlogForm = ({ create }) => {
 
     return <>
         <h1>Create new</h1>
-        <div>
-            Title: <input className='title' type="text" value={blog?.title} onChange={(event) => setBlog(prev => ({ ...prev, title: event.target.value }))} />
+        <div className='mt-4'>
+            Title:
+            <input 
+                className='title form-control form-control-md w-25' 
+                type="text"
+                value={blog?.title}
+                onChange={(event) => setBlog(prev => ({ ...prev, title: event.target.value }))} 
+            />
         </div>
         <div>
-            Autor: <input className='author' type="text" value={blog?.author} onChange={(event) => setBlog(prev => ({ ...prev, author: event.target.value }))} />
+            Autor:
+            <input 
+                className='author title form-control form-control-md w-25' 
+                type="text"
+                value={blog?.author}
+                onChange={(event) => setBlog(prev => ({ ...prev, author: event.target.value }))}
+            />
         </div>
         <div>
-            URL: <input className='url' type="url" value={blog?.url} onChange={(event) => setBlog(prev => ({ ...prev, url: event.target.value }))} />
+            URL:
+            <input
+                className='url title form-control form-control-md w-25' 
+                type="url"
+                value={blog?.url}
+                onChange={(event) => setBlog(prev => ({ ...prev, url: event.target.value }))}
+            />
         </div>
-        <div>
-            <button className='btn-create' onClick={createBlog} >Create</button>
+        <div className='my-3'>
+            <button type="button" className="btn btn-primary" onClick={createBlog} >Create</button>
         </div>
     </>
 }

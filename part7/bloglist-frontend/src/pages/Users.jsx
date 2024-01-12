@@ -14,12 +14,12 @@ const UserList = () => {
     }, [])
     return (
         <>
-            <h1>Users</h1>
-            <table>
-               <thead>
+            <h1 className='mt-3'>Users</h1>
+            <table className='table'>
+               <thead className="thead-dark">
                     <tr>
-                        <th style={{ textAlign: 'left'}}>Username</th>
-                        <th>Blogs created</th>
+                        <th className='h3' style={{ textAlign: 'left'}}>Username</th>
+                        <th className='h3'>Blogs created</th>
                     </tr>
                </thead>
                <tbody>
