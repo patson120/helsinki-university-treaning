@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteBlogById, updateLike} from '../Redux/reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
-    const user = useSelector(state => state.user)
+    const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
 
     const [visibilty, setVisibity] = useState(false)
@@ -30,7 +31,11 @@ const Blog = ({ blog }) => {
     }
     return (
         <div style={blogStyle} className='blog'>
-            {data.title} {data.author} <button onClick={toggleVisibility} className='visibility'> {visibilty ? 'hide' : 'View'}</button>
+            <Link to={`/blogs/${blog.id}`}>
+                {data.title} {data.author} 
+            </Link>
+            
+            <button onClick={toggleVisibility} className='visibility'> {visibilty ? 'hide' : 'View'}</button>
             {visibilty &&
                 <div>
                     <p className='url'>{data.url}</p>
