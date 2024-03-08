@@ -23,7 +23,6 @@ const Books = ({ books }: any) => {
 
   return (
     <div>
-      <BookForm />
       <hr />
       <h2>Books</h2>
       {books.map((book: any) => (
