@@ -2,7 +2,7 @@
 import './App.css'
 
 import { gql, useQuery } from '@apollo/client'
-import Persons from './components/Persons'
+import Books from './components/Books'
 
 const ALL_BOOKS = gql`
   query {
@@ -24,7 +24,7 @@ function App() {
   }
 
   return (
-    <Persons books={result.data.allBooks} />
+    <Books books={result.data.allBooks} />
   )
 }
 
