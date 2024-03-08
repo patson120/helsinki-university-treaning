@@ -38,9 +38,14 @@ const Authors = (props) => {
     editAuthor({
       variables: {
         name: author.name,
-        born: author.born
+        setBornTo: Number(author.born)
       }
     })
+  }
+
+  const findAuthor = (name) => {
+    const auth = authors.find(a => a.name === name)
+    setAuthor(auth)
   }
 
   return (
@@ -70,19 +75,25 @@ const Authors = (props) => {
         <form onSubmit={submit}>
         <div>
             name
-            <input
+            {/* <input
               value={author.name}
               disabled={true}
               onChange={({ target }) => setAuthor(prev => ({...prev, name: target.value}))}
-            />
+            /> */}
+            <select value={author.name} 
+              onChange={({ target }) => findAuthor(target.value)}>
+              {
+                authors.map((author) => <option key={`${author.name}`} value={author.name} >{author.name}</option>)
+              }
+            </select>
         </div>
 
-        
+
         <div>
             born
             <input
               type="number"
-                value={author.born}
+                value={author.born == null ? 0 : author.born}
                 onChange={({ target }) => setAuthor({...author, born: target.value})}
             />
         </div> <br />
