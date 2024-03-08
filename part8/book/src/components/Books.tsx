@@ -1,18 +1,9 @@
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { useState } from "react"
 import BookForm from "./BookForm"
+import { FIND_BOOK } from "../queries"
 
-const FIND_BOOK = gql`
-  query findBookByName($titleToSearch: String!) {
-    findBook(title: $titleToSearch) {
-      title
-      author
-      published
-      genres
-      id
-    }
-  }
-`
+
 
 const Books = ({ books }: any) => {
 
