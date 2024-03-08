@@ -4,7 +4,6 @@ import { FormEvent, useState } from "react"
 import { ADD_BOOK, ALL_BOOKS } from '../queries'
 
 
-
 const BookForm = ({ setError }: any) => {
 
     const [createBook] = useMutation(ADD_BOOK,

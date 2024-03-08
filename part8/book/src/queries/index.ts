@@ -32,11 +32,11 @@ export const ADD_BOOK = gql`
 
 export const ALL_BOOKS = gql`
     query {
-    allBooks {
-        title
-        author
-        published,
-        id
-    }
+      allBooks {
+          title
+          author
+          published,
+          id
+      }
     }
 `
