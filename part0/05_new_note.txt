@@ -1,13 +1,19 @@
 title Sequence Diagram
 
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+activate server
 server-->browser: HTML-code
+desactivate server
 
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+activate server
 server-->browser: main.css
+desactivate server
 
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+activate server
 server-->browser: spa.js
+desactivate server
 
 
 note over browser:
@@ -16,7 +22,9 @@ that requests JSON data from server
 end note
 
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+activate server
 server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+desactivate server
 
 note over browser:
 browser executes the event handler
