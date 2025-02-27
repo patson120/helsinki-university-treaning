@@ -1,6 +1,6 @@
 title Sequence Diagram
 
-browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note, { content: "HTML is Good", date: "2019-05-23" }
 server-->browser: HTTP 302
 
 
