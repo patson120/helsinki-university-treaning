@@ -1,11 +1,11 @@
-title Sequence Diagram
+sequenceDiagram
+    title Sequence Diagram
+    participant browser
+    participant server
 
-browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
-activate server
-server-->browser: {"message":"note created"}
-desactivate server
+    browser->>server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa, data { "content": "HTML is Good", "date": "2025-02-10" },
+    activate server
+    server-->>browser: {"message":"note created"}
+    deactivate server
 
-note over browser:
-browser starts executing js-code
-to push new note in the list
-end note
+    Note right of browser: browser starts executing js-code to push new note in the list
