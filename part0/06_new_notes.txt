@@ -1,6 +1,11 @@
 title Sequence Diagram
 
 browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+activate server
 server-->browser: {"message":"note created"}
+desactivate server
 
-
+note over browser:
+browser starts executing js-code
+to push new note in the list
+end note
